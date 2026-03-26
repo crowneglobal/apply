@@ -212,8 +212,7 @@ document.getElementById('applicationForm').addEventListener('submit', async func
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         chat_id: -1001776087085,
-        text: text.substring(0, 4096),
-        message_thread_id: 1
+        text: text.substring(0, 4096)
       })
     });
     if (!res.ok) throw new Error('Submit failed');
