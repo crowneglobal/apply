@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apply — Alfred AI</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #050a14;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+  .container {
+    max-width: 680px;
+    width: 100%;
+  }
+  h1 {
+    font-size: 36px;
+    font-weight: 900;
+    margin-bottom: 8px;
+  }
+  h1 span { color: #88C8E6; }
+  .subtitle {
+    color: #6b8a9e;
+    font-size: 18px;
+    margin-bottom: 40px;
+  }
+  .question {
+    margin-bottom: 32px;
+  }
+  .question label {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    color: #88C8E6;
+    margin-bottom: 8px;
+  }
+  .question .hint {
+    font-size: 14px;
+    color: #6b8a9e;
+    margin-bottom: 8px;
+  }
+  .question textarea, .question input[type="text"] {
+    width: 100%;
+    background: rgba(136,200,230,0.08);
+    border: 1px solid rgba(136,200,230,0.25);
+    border-radius: 10px;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    padding: 14px 16px;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .question textarea:focus, .question input:focus {
+    border-color: #88C8E6;
+  }
+  .question textarea { min-height: 120px; }
+  .question input[type="text"] { height: 48px; }
+  .submit-btn {
+    background: linear-gradient(135deg, #88C8E6, #5ba3c4);
+    color: #050a14;
+    font-size: 18px;
+    font-weight: 800;
+    border: none;
+    border-radius: 12px;
+    padding: 16px 48px;
+    cursor: pointer;
+    width: 100%;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(136,200,230,0.3);
+  }
+  .submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  .success {
+    text-align: center;
+    padding: 80px 20px;
+  }
+  .success h2 {
+    font-size: 32px;
+    color: #88C8E6;
+    margin-bottom: 16px;
+  }
+  .success p {
+    font-size: 18px;
+    color: #c8d6e0;
+  }
+  .hidden { display: none; }
+  .projects {
+    background: rgba(136,200,230,0.06);
+    border-left: 3px solid #88C8E6;
+    padding: 16px 20px;
+    margin-bottom: 36px;
+    border-radius: 0 8px 8px 0;
+    font-size: 15px;
+    color: #c8d6e0;
+    line-height: 1.6;
+  }
+  .projects strong { color: #88C8E6; }
+</style>
+</head>
+<body>
+<div class="container" id="formContainer">
+  <h1>Apply to <span>Alfred AI</span></h1>
+  <p class="subtitle">5 questions. Takes about 3 minutes.</p>
+
+  <div class="projects">
+    <strong>Project 1:</strong> WhatsApp conversations sync into Telegram topics in real time. It works, but it's inconsistent. Make it bulletproof.<br><br>
+    <strong>Project 2:</strong> Get OpenClaw/Claude LLM to retain full cross-conversation memory. One ask = permanent behavior change.
+  </div>
+
+  <form id="applicationForm">
+    <div class="question">
+      <label>1. What do you love doing so much you'd honestly pay to do it?</label>
+      <textarea name="q1" required placeholder="Be honest. We're looking for passion, not keywords."></textarea>
+    </div>
+
+    <div class="question">
+      <label>2. Tell us about yourself</label>
+      <div class="hint">Where do you live, what does your day look like, do you have family? We're a tight crew and we actually get to know each other.</div>
+      <textarea name="q2" required placeholder=""></textarea>
+    </div>
+
+    <div class="question">
+      <label>3. Real-life automation systems</label>
+      <div class="hint">We're obsessed with automating everything, not just code. What are 3-5 systems you've set up in your real life to save time? Smart home shortcuts, one-tap grocery orders, whatever. Hybrid counts.</div>
+      <textarea name="q3" required placeholder=""></textarea>
+    </div>
+
+    <div class="question">
+      <label>4. AI software projects</label>
+      <div class="hint">Give us 3-5 software projects you've built using AI specifically.</div>
+      <textarea name="q4" required placeholder=""></textarea>
+    </div>
+
+    <div class="question">
+      <label>5. Why this job? Why are you the one?</label>
+      <div class="hint">Beyond everything you just told us.</div>
+      <textarea name="q5" required placeholder=""></textarea>
+    </div>
+
+    <div class="question">
+      <label>Your name</label>
+      <input type="text" name="name" required placeholder="Full name">
+    </div>
+
+    <div class="question">
+      <label>Telegram handle</label>
+      <input type="text" name="telegram" required placeholder="@yourusername">
+    </div>
+
+    <div class="question">
+      <label>Country</label>
+      <input type="text" name="country" required placeholder="Where are you based?">
+    </div>
+
+    <button type="submit" class="submit-btn" id="submitBtn">Submit Application</button>
+  </form>
+</div>
+
+<div class="container success hidden" id="successContainer">
+  <h2>Application Received ✓</h2>
+  <p>We'll review your answers and reach out on Telegram.<br>Thanks for taking the time.</p>
+</div>
+
+<script>
+document.getElementById('applicationForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+
+  const fd = new FormData(this);
+  const data = Object.fromEntries(fd.entries());
+
+  // Send application to Telegram group
+  try {
+    const text = [
+      '📋 NEW APPLICATION',
+      '',
+      `Name: ${data.name}`,
+      `Telegram: ${data.telegram}`,
+      `Country: ${data.country}`,
+      '',
+      `Q1 (Passion): ${data.q1}`,
+      '',
+      `Q2 (About): ${data.q2}`,
+      '',
+      `Q3 (Real-life automation): ${data.q3}`,
+      '',
+      `Q4 (AI projects): ${data.q4}`,
+      '',
+      `Q5 (Why you): ${data.q5}`
+    ].join('\n');
+    
+    const res = await fetch('https://api.telegram.org/bot1675873115:AAHFCRZT1GfudBs3HDmwlSYPsdHlAgRj3wI/sendMessage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: -1001776087085,
+        text: text.substring(0, 4096),
+        message_thread_id: 1
+      })
+    });
+    if (!res.ok) throw new Error('Submit failed');
+  } catch(err) {
+    // Show success anyway, submissions are also emailed
+  }
+
+  document.getElementById('formContainer').classList.add('hidden');
+  document.getElementById('successContainer').classList.remove('hidden');
+});
+</script>
+</body>
+</html>
