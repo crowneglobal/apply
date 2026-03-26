@@ -187,37 +187,52 @@ document.getElementById('applicationForm').addEventListener('submit', async func
   const fd = new FormData(this);
   const data = Object.fromEntries(fd.entries());
 
-  // Send application to Telegram group
+  const API = 'https://api.telegram.org/bot1675873115:AAHFCRZT1GfudBs3HDmwlSYPsdHlAgRj3wI';
+  const CHAT = -1001776087085;
+
   try {
-    const text = [
-      '📋 NEW APPLICATION',
-      '',
-      `Name: ${data.name}`,
-      `Telegram: ${data.telegram}`,
-      `Country: ${data.country}`,
-      '',
-      `Q1 (Passion): ${data.q1}`,
-      '',
-      `Q2 (About): ${data.q2}`,
-      '',
-      `Q3 (Real-life automation): ${data.q3}`,
-      '',
-      `Q4 (AI projects): ${data.q4}`,
-      '',
-      `Q5 (Why you): ${data.q5}`
-    ].join('\n');
-    
-    const res = await fetch('https://api.telegram.org/bot1675873115:AAHFCRZT1GfudBs3HDmwlSYPsdHlAgRj3wI/sendMessage', {
+    // 1. Create a new forum topic for this candidate
+    const topicRes = await fetch(`${API}/createForumTopic`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        chat_id: -1001776087085,
-        text: text.substring(0, 4096)
+        chat_id: CHAT,
+        name: `Candidate: ${data.name} — ${data.country}`
       })
     });
-    if (!res.ok) throw new Error('Submit failed');
+    const topicData = await topicRes.json();
+    const threadId = topicData.ok ? topicData.result.message_thread_id : null;
+
+    // 2. Post answers into the topic
+    const sections = [
+      `👤 ${data.name} | ${data.telegram} | ${data.country}`,
+      '',
+      '— Q1: What do you love doing so much you\'d pay to do it?',
+      data.q1,
+      '',
+      '— Q2: About yourself',
+      data.q2,
+      '',
+      '— Q3: Real-life automation systems (3-5)',
+      data.q3,
+      '',
+      '— Q4: AI software projects (3-5)',
+      data.q4,
+      '',
+      '— Q5: Why this job? Why are you the one?',
+      data.q5
+    ].join('\n');
+
+    const msgBody = { chat_id: CHAT, text: sections.substring(0, 4096) };
+    if (threadId) msgBody.message_thread_id = threadId;
+
+    await fetch(`${API}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(msgBody)
+    });
   } catch(err) {
-    // Show success anyway, submissions are also emailed
+    // Show success anyway
   }
 
   document.getElementById('formContainer').classList.add('hidden');
